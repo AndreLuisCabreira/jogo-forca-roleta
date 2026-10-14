@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="description" content="Última Letra: uma palavra, seis câmaras e uma última chance de escapar." />
+    <title>Última Letra</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./index.html" aria-label="Última Letra, início"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>última letra<span class="brand-dot">.</span></span></a>
+        <span id="header-player" class="header-note">PALAVRAS / PROGRESSO</span>
+      </header>
+      <p id="storage-warning" role="status" hidden>Não foi possível salvar neste navegador. Seu progresso ficará apenas nesta sessão.</p>
+      <main>
+        <!-- As telas compartilham o mesmo documento; hidden controla navegação e acessibilidade. -->
+        <section class="screen welcome-screen" id="welcome" data-screen="welcome">
+          <p class="eyebrow">SEU PRÓXIMO ACERTO COMEÇA AQUI</p>
+          <h1>Palavra por <em>palavra.</em></h1>
+          <p class="intro-copy">Um jogo de nervos, vocabulário e pequenas conquistas. Construa sua jornada no seu ritmo.</p>
+          <div id="welcome-return" hidden><h2 id="welcome-name"></h2><button id="continue-player" class="new-game-button" type="button">Continuar ↗</button><button id="switch-player" class="secondary" type="button">Trocar usuário</button></div>
+          <form id="identify-form" class="identify-form">
+            <h2>Olá! Como podemos chamar você?</h2>
+            <label for="player-name">Seu nome</label><input id="player-name" maxlength="40" required autocomplete="given-name" placeholder="Seu nome">
+            <label for="player-alias">Apelido <span>(opcional)</span></label><input id="player-alias" maxlength="24" autocomplete="nickname" placeholder="Como você aparece no placar">
+            <button class="new-game-button" type="submit">Entrar ↗</button><p id="identify-error" role="status"></p>
+          </form>
+          <div id="saved-profiles" class="saved-profiles"></div>
+          <p class="local-note">Perfis locais neste navegador. Sem senha, conta online ou sincronização.</p>
+        </section>
+
+        <section class="screen menu-screen" id="menu" data-screen="menu" hidden>
+          <div class="intro"><div><p class="eyebrow">SUA JORNADA / MODO ROLETA</p><h1>Escolha seu <em>desafio.</em></h1><p id="menu-greeting" class="intro-copy"></p></div><div class="menu-top-actions"><button id="open-tutorial" class="secondary" type="button">Como jogar?</button><button id="menu-switch" class="secondary" type="button">Trocar usuário</button></div></div>
+          <div id="panorama" class="panorama" aria-label="Seu placar"></div>
+          <nav class="menu-nav" aria-label="Áreas da jornada">
+            <button type="button" id="nav-play" data-menu-target="play" aria-pressed="true">Jogar</button>
+            <button type="button" id="nav-progress" data-menu-target="progress" aria-pressed="false">Minha jornada</button>
+            <button type="button" id="nav-achievements" data-menu-target="achievements" aria-pressed="false">Conquistas</button>
+            <button type="button" id="nav-ranking" data-menu-target="ranking" aria-pressed="false">Ranking</button>
+            <button type="button" id="nav-rewards" data-menu-target="rewards" aria-pressed="false">Recompensas</button>
+            <button type="button" id="nav-support" data-menu-target="support" aria-pressed="false">Apoio / Plus</button>
+          </nav>
+
+          <div class="menu-stage" id="menu-stage">
+            <aside class="menu-art" aria-label="Sua jornada no Última Letra">
+              <span class="art-kicker">VOCABULÁRIO / NERVOS / DESCOBERTA</span>
+              <div class="letter-art" aria-hidden="true">
+                <svg viewBox="0 0 360 340" focusable="false">
+                  <defs><radialGradient id="letter-glow"><stop stop-color="#ffd60a" stop-opacity=".24"/><stop offset="1" stop-color="#ffd60a" stop-opacity="0"/></radialGradient><linearGradient id="letter-gold" x2="1" y2="1"><stop stop-color="#fff3a1"/><stop offset="1" stop-color="#b58b00"/></linearGradient></defs>
+                  <circle cx="180" cy="170" r="165" fill="url(#letter-glow)"/>
+                  <g fill="none" stroke="#74652a"><circle cx="180" cy="170" r="126" stroke-dasharray="2 10"/><circle cx="180" cy="170" r="106"/><ellipse cx="180" cy="170" rx="156" ry="65" transform="rotate(-32 180 170)" stroke="#cab03b" stroke-opacity=".55"/></g>
+                  <path d="M180 83l75 156h-37l-16-36h-46l-17 36h-36z M179 141l-13 31h28z" fill="url(#letter-gold)" fill-rule="evenodd"/>
+                  <g fill="#15150f" stroke="#6e632c"><rect x="36" y="71" width="47" height="47" rx="10" transform="rotate(-12 59 94)"/><rect x="277" y="194" width="47" height="47" rx="10" transform="rotate(12 300 217)"/><rect x="95" y="265" width="40" height="40" rx="9" transform="rotate(-8 115 285)"/></g>
+                  <g fill="#f5e5a1" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle"><text x="59" y="104" font-size="24">Z</text><text x="300" y="226" font-size="24">M</text><text x="115" y="293" font-size="20">R</text></g>
+                  <g fill="#ffd60a"><circle cx="281" cy="87" r="5"/><circle cx="48" cy="225" r="3"/><circle cx="239" cy="282" r="4"/></g>
+                  <path d="M275 54h12m-6-6v12 M74 170h10m-5-5v10" stroke="#ead777" stroke-width="2"/>
+                </svg>
+              </div>
+              <h2 id="menu-art-title">Uma letra.<br>Muitas possibilidades.</h2>
+              <p id="menu-art-copy">Escolha um tema e descubra até onde seu vocabulário pode levar você.</p>
+              <div class="art-stats"><span><small>SEU NÍVEL</small><strong id="menu-art-level">01</strong></span><span><small>SUA PONTUAÇÃO</small><strong id="menu-art-score">0</strong></span></div>
+            </aside>
+          <section id="challenge" data-menu-view="play" class="surface"><div class="section-heading"><div><h2>Categoria</h2></div></div><div id="categories" class="category-grid"></div>
+            <p id="selected-challenge" class="selected-challenge" role="status" aria-live="polite"></p><div class="challenge-actions"><label for="menu-difficulty">Dificuldade <select id="menu-difficulty"><option value="facil">Fácil · entrada</option><option value="medio">Médio · evolução</option><option value="dificil">Difícil · domínio</option></select></label><p id="difficulty-reward"></p><button id="play" class="new-game-button" type="button">Começar desafio ↗</button></div>
+          </section>
+          <div class="dashboard-grid"><section id="journey" data-menu-view="progress" class="surface"><p class="eyebrow">02 / SUA EVOLUÇÃO</p><h2>De semente a domínio.</h2><div id="journey-stages" class="journey-stages"></div><p id="level-detail"></p><progress id="level-progress" max="500" value="0" aria-label="Progresso para o próximo nível"></progress><h3>🧠 Saúde Cognitiva</h3><progress id="cognitive-progress" max="100" value="0" aria-label="Atividade lúdica semanal"></progress><p id="cognitive-detail"></p><p class="local-note">Indicador lúdico de atividade no jogo. Não é avaliação médica nem medição clínica. Meta ilustrativa: 200 pontos em 7 dias.</p></section>
+          <section id="ranking-panel" data-menu-view="ranking" class="surface"><p class="eyebrow">03 / PLACAR PANORÂMICO</p><h2>Ranking geral.</h2><p class="demo-label">RANKING E PRESENÇA SIMULADOS</p><p id="presence"></p><ol id="ranking" class="ranking"></ol><p class="local-note">Seu resultado é local; os outros participantes são exemplos. Não há conexão online.</p></section></div>
+          <section id="achievements-panel" data-menu-view="achievements" class="surface"><p class="eyebrow">04 / CONQUISTAS</p><h2>Pequenas vitórias. Novas marcas.</h2><div id="achievements" class="badge-grid"></div><div class="list-pagination"><button id="achievements-prev" class="secondary" type="button">Anterior</button><span id="achievements-page" role="status"></span><button id="achievements-next" class="secondary" type="button">Próxima</button></div></section>
+          <section id="rewards-panel" data-menu-view="rewards" class="surface"><p class="eyebrow">05 / OPORTUNI CLUBE</p><h2>Sua próxima conquista vale mais.</h2><p class="demo-label">BENEFÍCIOS ILUSTRATIVOS · SEM RESGATE REAL</p><p id="reward-progress"></p><p class="local-note">Vitórias: Fácil = 1 marco · Médio = 2 · Difícil = 4. Metas: 5, 10, 25 e 50. Bônus: séries de 3, 7 e 14.</p><div class="reward-goal"><p id="next-reward-label"></p><progress id="next-reward-bar" max="5" value="0" aria-label="Progresso até a próxima recompensa"></progress><p id="next-streak-label" class="local-note"></p></div><div id="rewards" class="badge-grid"></div><div class="list-pagination"><button id="rewards-prev" class="secondary" type="button">Anterior</button><span id="rewards-page" role="status"></span><button id="rewards-next" class="secondary" type="button">Próxima</button></div><p id="reward-detail" role="status"></p></section>
+          <div id="support-group" class="support-group" data-menu-view="support"><nav class="support-tabs" aria-label="Apoio e Plus"><button id="support-tab-support" class="secondary" type="button" aria-pressed="true">Apoio</button><button id="support-tab-plus" class="secondary" type="button" aria-pressed="false">Conta Plus</button></nav><section class="surface" id="support-panel"><p class="eyebrow">06 / APOIE O PROJETO</p><h2>Feito para continuar gratuito.</h2><p>Ajude a manter os jogos gratuitos. A área de apoio está em preparação.</p><button id="support-toggle" class="secondary" type="button" aria-expanded="false" aria-controls="support-details">Ver área de apoio / QR Code</button><div id="support-details" class="support-details" hidden><div class="qr-placeholder">QR CODE<br><small>EM BREVE</small></div><p class="local-note">Espaço reservado. Nenhuma cobrança ou chave de pagamento ativa. Este desenho não é um QR Code escaneável.</p></div></section>
+          <section class="surface" id="plus-panel" hidden><p class="eyebrow">CONTA PLUS / CONCEITO</p><h2>Uma experiência extra.</h2><p>Sem anúncios, benefícios especiais, futuras categorias antecipadas e estatísticas avançadas.</p><button id="plus-toggle" class="secondary" type="button" aria-pressed="false">Experimentar Plus demonstrativo</button><p id="plus-detail" class="local-note"></p></section></div>
+          </div>
+        </section>
+        <section class="screen game-screen" id="game" data-screen="game" hidden>
+          <div class="game-hud"><span id="game-player"></span><span id="game-stats"></span></div>
+        <section class="game-card" aria-label="Última Letra">
+          <div class="toolbar">
+            <div class="level-control">
+              <label for="difficulty">DIFICULDADE</label>
+              <div class="select-wrap">
+                <select id="difficulty" aria-label="Selecionar dificuldade">
+                  <option value="facil">Fácil · 3–5 letras</option>
+                  <option value="medio">Médio · 6–8 letras</option>
+                  <option value="dificil">Difícil · 9+ letras</option>
+                </select>
+              </div>
+            </div>
+            <div class="score-area" aria-label="Placar da dificuldade selecionada">
+              <div class="score-item"><span class="score-label">VITÓRIAS</span><strong id="wins">00</strong></div>
+              <span class="score-divider" aria-hidden="true"></span>
+              <div class="score-item"><span class="score-label">DERROTAS</span><strong id="losses">00</strong></div>
+              <button class="reset-button" id="reset-score" type="button" aria-label="Zerar placar" title="Zerar placar">Zerar placar</button>
+            </div>
+          </div>
+
+          <div class="game-content">
+            <div class="drawing-panel" id="roulette-panel">
+              <div class="drawing-topline"><span>O TAMBOR <span class="drawing-index">/ 06</span></span><button id="sound-toggle" class="sound-toggle" type="button" aria-pressed="false">Som: desligado</button></div>
+              <svg class="cylinder" viewBox="0 0 320 320" role="img" aria-labelledby="drawing-title drawing-description">
+                <title id="drawing-title">Tambor de seis câmaras</title>
+                <desc id="drawing-description">Uma câmara carregada. A primeira é sempre segura.</desc>
+                <defs><radialGradient id="metal"><stop stop-color="#535047"/><stop offset=".65" stop-color="#272724"/><stop offset="1" stop-color="#141514"/></radialGradient></defs>
+                <circle cx="160" cy="160" r="142" fill="#101110" stroke="#494638" stroke-width="2"/>
+                <g id="cylinder-rotor">
+                  <circle cx="160" cy="160" r="130" fill="url(#metal)" stroke="#70684b" stroke-width="2"/>
+                  <circle class="chamber" cx="160" cy="75" r="28"/><circle class="chamber" cx="234" cy="117" r="28"/>
+                  <circle class="chamber" cx="234" cy="203" r="28"/><circle class="chamber" cx="160" cy="245" r="28"/>
+                  <circle class="chamber" cx="86" cy="203" r="28"/><circle class="chamber" cx="86" cy="117" r="28"/>
+                  <circle cx="160" cy="160" r="24" fill="#151615" stroke="#8c8156" stroke-width="2"/>
+                  <path d="M151 160h18 M160 151v18" stroke="#8c8156" stroke-width="2"/>
+                </g>
+                <path d="M151 9h18l-9 17z" fill="#ffd60a"/>
+              </svg>
+              <div class="roulette-info"><span class="section-kicker" id="chamber-label">UMA CÂMARA CARREGADA</span><p id="risk-label">O primeiro erro é seguro.</p><div id="chamber-track" class="chamber-track" aria-label="Histórico das câmaras"></div></div>
+              <button id="trigger" class="trigger-button" type="button" disabled>Puxar o gatilho</button>
+              <div class="drawing-footer"><span>ACERTE A PALAVRA. ESCAPE.</span><span class="footer-dots" aria-hidden="true">•••</span></div>
+            </div>
+
+            <div class="play-panel">
+              <div class="round-heading">
+                <div><span class="section-kicker"><span id="game-category">GERAL</span></span><h2>Que palavra é essa?</h2></div>
+                <div class="remaining-pill" id="remaining-pill"><span class="pill-dot" aria-hidden="true"></span><span id="remaining">1º erro seguro</span></div>
+              </div>
+
+              <div class="word-area">
+                <div class="word-slots" id="word" aria-label="A partida ainda não começou"><span class="word-placeholder">_ _ _ _ _</span></div>
+                <p class="feedback" id="feedback" role="status" aria-live="polite" aria-atomic="true">Escolha um nível e comece a jogar.</p>
+              </div>
+
+              <div class="word-progress"><label for="word-progress">Palavra descoberta <strong id="word-percent">0%</strong></label><progress id="word-progress" max="100" value="0">0%</progress><span id="letter-streak">0 letras certas seguidas</span></div><div class="attempts-row">
+                <div class="attempts-label"><span>SUAS TENTATIVAS</span><strong id="error-count">Erros: 0/6</strong></div>
+                <div class="attempted-letters" id="attempted" aria-label="Letras já tentadas"><span class="empty-attempts">Nenhuma letra ainda</span></div>
+              </div>
+
+              <div class="keyboard-section">
+                <div class="keyboard-heading"><span>ESCOLHA UMA LETRA</span><span>OU USE SEU TECLADO ↗</span></div>
+                <div class="keyboard qwerty" id="keyboard" role="group" aria-label="Teclado de letras"></div>
+              </div>
+
+              <div class="game-actions">
+                <button class="new-game-button" id="new-game" type="button">Nova partida <span aria-hidden="true">↗</span></button>
+                <button class="secondary" id="leave-game" type="button">Encerrar e ver resultado</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        </section>
+        <section class="result-card screen" id="result" data-screen="result" hidden>
+          <div class="result-heading"><div class="result-icon" id="result-icon" aria-hidden="true"></div><div class="result-copy"><span class="section-kicker" id="result-kicker"></span><h2 id="result-title" tabindex="-1"></h2><p id="result-detail"></p></div></div>
+          <nav class="result-tabs" aria-label="Detalhes da partida">
+            <button id="result-tab-summary" class="secondary" type="button" aria-pressed="true">Resumo</button>
+            <button id="result-tab-benefits" class="secondary" type="button" aria-pressed="false">Conquistas e recompensas</button>
+            <button id="result-tab-ad" class="secondary" type="button" aria-pressed="false">Parceiro · demo</button>
+          </nav>
+          <div class="result-content">
+            <div id="result-summary"><div id="result-progress" class="result-progress"></div><div id="result-panorama" class="panorama result-panorama" aria-label="Placar atualizado após a partida"></div><p id="result-presence" class="demo-label"></p></div>
+            <div id="result-benefits" hidden><div class="reward-goal"><p id="result-next-reward-label"></p><progress id="result-next-reward-bar" max="5" value="0" aria-label="Progresso até a próxima recompensa"></progress><p id="result-next-streak-label" class="local-note"></p></div><div id="result-unlocks" aria-live="polite"></div><p class="local-note">Todas as conquistas e recompensas ficam disponíveis no menu.</p></div>
+            <aside id="mock-ad" class="mock-ad" hidden><span class="demo-label">PUBLICIDADE · DEMONSTRAÇÃO</span><h3>Um espaço para futuros parceiros.</h3><p>Nenhum anúncio real, rastreamento ou oferta comercial nesta versão.</p></aside>
+          </div>
+          <div class="result-actions"><button class="secondary" id="result-menu" type="button">Voltar ao menu</button><button class="result-button" id="result-restart" type="button">Nova partida ↗</button></div>
+        </section>
+        <section class="screen tutorial-screen" id="tutorial" data-screen="tutorial" hidden>
+          <p class="eyebrow" id="tutorial-count">PASSO 1 / 4</p>
+          <div id="tutorial-icon" class="tutorial-icon" aria-hidden="true"></div>
+          <h1 id="tutorial-title" tabindex="-1"></h1><p id="tutorial-copy"></p><p id="tutorial-note" class="local-note"></p>
+          <div class="tutorial-actions"><button id="tutorial-back" class="secondary" type="button">Anterior</button><button id="tutorial-next" class="new-game-button" type="button">Próximo ↗</button><button id="tutorial-close" class="secondary" type="button">Voltar aos desafios</button></div>
+        </section>
+      </main><footer class="site-footer"><span>ÚLTIMA LETRA. — UM ACERTO DE CADA VEZ.</span><span>JOGUE NO SEU RITMO.</span></footer>
+    </div>
+  </body>
+</html>
